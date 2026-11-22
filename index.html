@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Realm Tappers - Roblox Style Clicker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="world-0">
+    <!-- Floating Background Particles -->
+    <div id="bg-particles" class="bg-particles"></div>
+    <div id="screen-flash" class="screen-flash"></div>
+
+    <!-- Top HUD Bar -->
+    <header class="top-hud">
+        <div class="hud-left">
+            <div class="stat-pill coins-pill">
+                <div class="pill-icon">🪙</div>
+                <div class="pill-info">
+                    <span class="pill-label">MONETY</span>
+                    <span id="coins-display" class="pill-value">0.00</span>
+                </div>
+            </div>
+            <div class="stat-pill power-pill">
+                <div class="pill-icon">⚡</div>
+                <div class="pill-info">
+                    <span class="pill-label">MOC TAPA</span>
+                    <span id="tap-power-display" class="pill-value">0.15</span>
+                </div>
+            </div>
+            <div class="stat-pill dps-pill">
+                <div class="pill-icon">⚙️</div>
+                <div class="pill-info">
+                    <span class="pill-label">AUTO / SEK</span>
+                    <span id="dps-display" class="pill-value">0.00</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="hud-center">
+            <div id="world-badge" class="world-badge">
+                <span id="world-icon">🌻</span>
+                <div class="world-title-group">
+                    <span class="world-subtitle">KRAINA 1 / 6</span>
+                    <h1 id="world-name">The Fields</h1>
+                </div>
+                <span id="world-mult-badge" class="mult-tag">x1.0</span>
+            </div>
+        </div>
+
+        <div class="hud-right">
+            <div class="autosave-indicator" id="autosave-badge" title="Automatyczny zapis w tle">
+                <span class="save-dot"></span> AUTO-SAVE
+            </div>
+            <button id="btn-sound" class="icon-btn" title="Dźwięk">🔊</button>
+            <button id="btn-reset" class="icon-btn danger-btn" title="Reset postępu">🗑️</button>
+        </div>
+    </header>
+
+    <!-- Main Game Container -->
+    <main class="game-container">
+        
+        <!-- TAB 1: ARENA & ACTIVE CLICKING -->
+        <section id="tab-arena" class="tab-panel active">
+            <!-- Equipped Totems Orbit Stage -->
+            <div class="equipped-stage">
+                <div class="equipped-slot-card" id="orbit-slot-0">
+                    <div class="slot-empty">Pusty Slot Totemu 1</div>
+                </div>
+                <div class="equipped-slot-card" id="orbit-slot-1">
+                    <div class="slot-empty">Pusty Slot Totemu 2</div>
+                </div>
+            </div>
+
+            <!-- Central Clicker Arena -->
+            <div class="clicker-wrapper">
+                <!-- Combo Bar Only -->
+                <div class="combo-container">
+                    <div class="combo-text">🔥 SERIA (COMBO) <span id="combo-mult">x1.00</span></div>
+                    <div class="combo-track">
+                        <div id="combo-fill" class="combo-fill"></div>
+                    </div>
+                </div>
+
+                <div class="arena-stage-relative">
+                    <button id="main-tapper" class="main-tapper" aria-label="Kliknij aby zbierać monety">
+                        <div class="tapper-glow"></div>
+                        <div id="tapper-visual" class="tapper-visual"></div>
+                    </button>
+                </div>
+                <div class="tap-hint" id="tap-hint-text">KLIKAJ LUB STUKNIJ W WYSPĘ!</div>
+            </div>
+
+            <!-- World Machine -->
+            <div class="machine-card" id="world-machine-card">
+                <div class="machine-header">
+                    <div id="machine-icon" class="machine-icon">🚜</div>
+                    <div class="machine-info-text">
+                        <div class="machine-title-row">
+                            <h3 id="machine-name">Złoty Traktor</h3>
+                            <span id="machine-ready-pill" class="ready-pill hidden">GOTOWE DO ODBIORU!</span>
+                        </div>
+                        <p id="machine-desc">Ładuje plony. Gdy pasek dojdzie do 100%, odbierz nagrodę!</p>
+                    </div>
+                </div>
+                <div class="machine-controls">
+                    <div class="machine-progress-wrap" id="machine-bar-clickable">
+                        <div id="machine-progress-bar" class="machine-progress-bar"></div>
+                        <span id="machine-status-text" class="machine-status-text">Ładowanie...</span>
+                    </div>
+                    <button id="btn-collect-machine" class="cartoon-btn btn-gold hidden">
+                        💰 ODBIERZ!
+                    </button>
+                    <button id="btn-upgrade-machine" class="cartoon-btn btn-green">
+                        Ulepsz (<span id="machine-lvl">Lv.1</span>)<br>
+                        <small id="machine-cost">15.00 🪙</small>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: CRATES & GACHA -->
+        <section id="tab-crates" class="tab-panel">
+            <div class="panel-header">
+                <h2>📦 Skrzynie Krainy</h2>
+                <p>Zakręć ruletką skrzyń w stylu Roblox i poluj na mityczne totemy!</p>
+            </div>
+
+            <div class="crate-showcase">
+                <div class="crate-stage" id="crate-stage">
+                    <div id="crate-visual" class="crate-visual"></div>
+                    <div class="crate-info">
+                        <h3 id="crate-name">Wooden Meadow Crate</h3>
+                        <div class="crate-cost-tag">Koszt: <span id="crate-cost">15.00</span> 🪙</div>
+                    </div>
+                </div>
+
+                <div class="crate-actions">
+                    <button id="btn-open-1" class="cartoon-btn btn-gold btn-large">
+                        OTWÓRZ x1<br><small id="open-1-cost">15.00 🪙</small>
+                    </button>
+                    <button id="btn-open-3" class="cartoon-btn btn-purple btn-large" disabled>
+                        OTWÓRZ x3 (Wymaga Drzewa)<br><small id="open-3-cost">45.00 🪙</small>
+                    </button>
+                </div>
+
+                <div class="drop-rates-box">
+                    <h4>Szanse na rzadkości (Twój Luck: <span id="luck-stat">1.00x</span>):</h4>
+                    <div id="drop-rates-grid" class="drop-rates-grid"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: TOTEM INVENTORY -->
+        <section id="tab-totems" class="tab-panel">
+            <div class="panel-header">
+                <h2>🗿 Ekwipunek Totemów (<span id="equipped-count">0</span>/2 Założone)</h2>
+                <p>Załóż maksymalnie 2 totemy. Wszystkie wylosowane przedmioty trafiają tutaj automatycznie!</p>
+            </div>
+
+            <div class="equipped-banner">
+                <div class="eq-card" id="inv-eq-0">
+                    <span class="eq-label">SLOT AKTYWNY 1</span>
+                    <div class="eq-content">Brak totemu</div>
+                </div>
+                <div class="eq-card" id="inv-eq-1">
+                    <span class="eq-label">SLOT AKTYWNY 2</span>
+                    <div class="eq-content">Brak totemu</div>
+                </div>
+            </div>
+
+            <div class="inventory-controls">
+                <button id="btn-equip-best" class="cartoon-btn btn-blue">⭐ Załóż Najlepsze</button>
+                <button id="btn-delete-dupes" class="cartoon-btn btn-red">♻️ Przetop Słabe (+Monety)</button>
+            </div>
+
+            <div id="totem-grid" class="totem-grid"></div>
+        </section>
+
+        <!-- TAB 4: SKILL TREE -->
+        <section id="tab-tree" class="tab-panel">
+            <div class="panel-header">
+                <h2>🌳 Drzewo Osiągnięć i Technologii</h2>
+                <p>Każda kraina odblokowuje nową gałąź ulepszeń. Odblokuj wyspy, aby sięgnąć wyżej!</p>
+            </div>
+            <div id="skill-tree-container" class="skill-tree-container"></div>
+        </section>
+
+        <!-- TAB 5: WORLDS MAP -->
+        <section id="tab-worlds" class="tab-panel">
+            <div class="panel-header">
+                <h2>🏝️ Mapa Wysp i Światów</h2>
+                <p>Zbijaj kłódki i odblokowuj kolejne światy z wyższymi mnożnikami ekonomicznymi!</p>
+            </div>
+            <div id="worlds-list" class="worlds-list"></div>
+        </section>
+
+    </main>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="bottom-nav">
+        <button class="nav-btn active" data-tab="tab-arena">
+            <span class="nav-icon">👆</span>
+            <span class="nav-text">Arena</span>
+        </button>
+        <button class="nav-btn" data-tab="tab-crates">
+            <span class="nav-icon">📦</span>
+            <span class="nav-text">Skrzynie</span>
+        </button>
+        <button class="nav-btn" data-tab="tab-totems">
+            <span class="nav-icon">🗿</span>
+            <span class="nav-text">Totemy</span>
+            <span id="nav-totem-badge" class="nav-badge hidden">!</span>
+        </button>
+        <button class="nav-btn" data-tab="tab-tree">
+            <span class="nav-icon">🌳</span>
+            <span class="nav-text">Drzewko</span>
+        </button>
+        <button class="nav-btn" data-tab="tab-worlds">
+            <span class="nav-icon">🏝️</span>
+            <span class="nav-text">Światy</span>
+        </button>
+    </nav>
+
+    <!-- EPIC ROULETTE & CRATE HATCHING MODAL -->
+    <div id="hatch-modal" class="modal-overlay hidden">
+        <div class="hatch-backdrop"></div>
+        <div id="confetti-container" class="confetti-container"></div>
+        <div class="hatch-stage">
+            <div id="hatch-title-banner" class="hatch-title-banner">OTWIERANIE SKRZYNI...</div>
+            
+            <div id="hatch-crate-anim" class="hatch-crate-anim"></div>
+
+            <div id="roulette-wrapper" class="roulette-wrapper hidden">
+                <div class="roulette-pointer-top">▼</div>
+                <div class="roulette-pointer-bottom">▲</div>
+                <div id="roulette-track" class="roulette-track"></div>
+            </div>
+
+            <div id="hatch-results" class="hatch-results hidden"></div>
+
+            <div class="hatch-modal-btns">
+                <button id="btn-skip-anim" class="cartoon-btn btn-gold">⏩ POMIŃ ANIMACJĘ</button>
+                <button id="btn-close-hatch" class="cartoon-btn btn-green btn-large hidden">✨ SUPER! ZBIERZ DO EKWIPUNKU</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
